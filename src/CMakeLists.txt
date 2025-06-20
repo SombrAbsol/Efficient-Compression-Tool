@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 4.0 FATAL_ERROR)
 project(ect VERSION 0.9.5 LANGUAGES CXX C)
 cmake_policy(SET CMP0048 NEW)
 
@@ -43,7 +43,10 @@ if(NOT MSVC)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-sign-compare -Wno-unused -Wno-unused-parameter")
 endif()
 
-# Use -Ofast in release builds
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mtune=native -march=native -flto -fvisibility=hidden -fdata-sections -ffunction-sections -fmerge-all-constants -fprefetch-loop-arrays")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mtune=native -march=native -flto -fvisibility=hidden -fdata-sections -ffunction-sections -fmerge-all-constants -fprefetch-loop-arrays")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -flto -Wl,--gc-sections -Wl,-O3 -s")
+
 foreach(var CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_RELWITHDEBINFO CMAKE_CXX_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELWITHDEBINFO)
 	if(${var} MATCHES "-O(2|3)")
 		string(REGEX REPLACE "-O(2|3)" "-Ofast" ${var} "${${var}}")
@@ -110,8 +113,8 @@ endif()
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang"
     OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" OR CMAKE_CXX_COMPILER_ID STREQUAL "ARMClang")
   if(CPU_TYPE STREQUAL "x86_64" OR CPU_TYPE STREQUAL "i386")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mpclmul -msse4.2")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mpclmul -msse4.2")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mpclmul -msse4.2 -mavx -mavx2 -mfma -m64")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mpclmul -msse4.2 -mavx -mavx2 -mfma -m64")
   elseif(CPU_TYPE STREQUAL arm64)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv8-a+crc")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc")

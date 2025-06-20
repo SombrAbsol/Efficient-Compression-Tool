@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+cmake_minimum_required(VERSION 4.0 FATAL_ERROR)
 project(optipng LANGUAGES C CXX)
 
 add_library(optipng
@@ -16,7 +16,7 @@ add_library(optipng
 add_library(optipng::optipng ALIAS optipng)
 
 #make sure that we are using custom zlib and custom libpng options
-set(PNG_BUILD_ZLIB ON CACHE BOOL "use custom zlib within libpng" FORCE)
+set(ZLIB_ROOT "${CMAKE_BINARY_DIR}/zlib" "use custom zlib within libpng" FORCE)
 set(PNG_ARM_NEON "on" CACHE STRING "Enable ARM NEON optimizations: on|off; on is default" FORCE)
 set(ZLIB_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../zlib/ CACHE FILEPATH "custom zlib directory" FORCE)
 
